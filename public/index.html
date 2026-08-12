@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VT Cart Checkout</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <h1>🛒 VT Move-In / Move-Out Cart Checkout</h1>
+  <button id="notifyBtn" class="ghost-btn">Enable alerts</button>
+</header>
+
+<main>
+  <section class="panel checkout-panel">
+    <h2>Check out a cart</h2>
+    <form id="checkoutForm">
+      <label>Cart
+        <select id="cartSelect" required></select>
+      </label>
+      <label>Building
+        <select id="buildingSelect" required></select>
+      </label>
+      <label>Student Leader in charge
+        <select id="slSelect" required></select>
+      </label>
+      <label>Borrower name
+        <input id="borrowerName" type="text" placeholder="Who is taking the cart" required>
+      </label>
+      <label>Borrower phone (number to call)
+        <input id="borrowerPhone" type="tel" placeholder="555-123-4567" required>
+      </label>
+      <button type="submit">Check out cart (starts 1-hour timer)</button>
+      <p id="checkoutError" class="error"></p>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h2>Active checkouts by building</h2>
+    <div id="activeList" class="active-list"></div>
+  </section>
+
+  <section class="panel admin-panel">
+    <h2>Manage buildings, carts &amp; Student Leaders</h2>
+    <div class="admin-grid">
+      <div>
+        <h3>Buildings</h3>
+        <form id="buildingForm" class="inline-form">
+          <input id="buildingName" type="text" placeholder="e.g. Pritchard Hall" required>
+          <button type="submit">Add</button>
+        </form>
+        <ul id="buildingList" class="admin-list"></ul>
+      </div>
+      <div>
+        <h3>Carts</h3>
+        <form id="cartForm" class="inline-form">
+          <input id="cartLabel" type="text" placeholder="e.g. Cart 3" required>
+          <button type="submit">Add</button>
+        </form>
+        <ul id="cartList" class="admin-list"></ul>
+      </div>
+      <div>
+        <h3>Student Leaders</h3>
+        <form id="slForm" class="inline-form">
+          <input id="slName" type="text" placeholder="Name" required>
+          <button type="submit">Add</button>
+        </form>
+        <ul id="slList" class="admin-list"></ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

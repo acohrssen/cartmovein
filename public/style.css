@@ -1,0 +1,237 @@
+:root {
+  --vt-maroon: #861F41;
+  --vt-orange: #E5751F;
+  --bg: #f4f2f0;
+  --panel: #ffffff;
+  --text: #222;
+  --muted: #666;
+  --danger: #c0392b;
+  --danger-bg: #fdecea;
+  --ok: #2e7d32;
+  --border: #e0dcd8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.topbar {
+  background: var(--vt-maroon);
+  color: white;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar h1 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.ghost-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.6);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.ghost-btn:hover { background: rgba(255,255,255,0.15); }
+
+main {
+  max-width: 1000px;
+  margin: 1.5rem auto;
+  padding: 0 1rem 3rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+}
+
+.panel h2 {
+  margin-top: 0;
+  color: var(--vt-maroon);
+  font-size: 1.1rem;
+}
+
+#checkoutForm {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.9rem;
+  align-items: end;
+}
+
+#checkoutForm label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: var(--muted);
+  gap: 0.3rem;
+}
+
+input, select {
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+button {
+  background: var(--vt-orange);
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+button:hover { filter: brightness(0.95); }
+
+.error {
+  color: var(--danger);
+  grid-column: 1 / -1;
+  margin: 0;
+  min-height: 1.2em;
+}
+
+.active-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.building-group h3 {
+  margin: 0 0 0.5rem;
+  color: var(--vt-maroon);
+  border-bottom: 2px solid var(--vt-orange);
+  padding-bottom: 0.25rem;
+}
+
+.empty-note {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.cart-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-bottom: 0.5rem;
+  background: #fafafa;
+}
+
+.cart-card.expired {
+  background: var(--danger-bg);
+  border-color: var(--danger);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(192,57,43,0); }
+  50% { box-shadow: 0 0 0 4px rgba(192,57,43,0.15); }
+}
+
+.cart-card .info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cart-card .info strong { font-size: 1.05rem; }
+.cart-card .info span { color: var(--muted); font-size: 0.85rem; }
+
+.timer {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.4rem;
+  font-weight: 700;
+  min-width: 4.5rem;
+  text-align: center;
+}
+
+.timer.expired {
+  color: var(--danger);
+}
+
+.alert-banner {
+  color: var(--danger);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cart-card .actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.secondary-btn {
+  background: white;
+  color: var(--vt-maroon);
+  border: 1px solid var(--vt-maroon);
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.inline-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+.inline-form input { flex: 1; min-width: 100px; }
+
+.admin-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.admin-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  background: #fafafa;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.admin-list li button {
+  background: transparent;
+  color: var(--danger);
+  font-weight: 400;
+  padding: 0.1rem 0.4rem;
+}
+
+.status-chip {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: #e8e8e8;
+  color: var(--muted);
+}
+.status-chip.available { background: #e3f2e3; color: var(--ok); }
+.status-chip.checked_out { background: #fde8d8; color: var(--vt-orange); }
