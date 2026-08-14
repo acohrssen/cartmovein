@@ -127,12 +127,15 @@ async function checkout({ cartId, buildingId, slId, borrowerName, borrowerPhone 
   if (!borrowerName || !borrowerName.trim()) fail('Borrower name is required');
   if (!borrowerPhone || !borrowerPhone.trim()) fail('Borrower phone number is required');
 
+  const claimed = await sql`UPDATE carts SET status = 'checked_out'
+    WHERE id = ${cart.id} AND status = 'available' RETURNING id`;
+  if (!claimed.length) fail('Cart is already checked out');
+
   const now = Date.now();
   const dueAt = now + CHECKOUT_MINUTES * 60 * 1000;
   await sql`INSERT INTO checkouts
       (cart_id, building_id, sl_id, borrower_name, borrower_phone, checked_out_at, due_at)
     VALUES (${cart.id}, ${building.id}, ${sl.id}, ${borrowerName.trim()}, ${borrowerPhone.trim()}, ${now}, ${dueAt})`;
-  await sql`UPDATE carts SET status = 'checked_out' WHERE id = ${cart.id}`;
   return loadState();
 }
 

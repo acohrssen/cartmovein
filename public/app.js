@@ -249,6 +249,109 @@ document.getElementById('notifyBtn').addEventListener('click', () => {
   }
 });
 
+initCardSwipeListener();
+
 refresh();
 setInterval(refresh, 5000);
 setInterval(tickTimers, 1000);
+
+// --- Card swiper support -------------------------------------------------
+// USB/keyboard-wedge card readers "type" the raw magstripe data into
+// whatever field has focus, very fast, then hit Enter. We intercept that
+// stream globally (so it works no matter which field is focused, or none),
+// parse the cardholder name off track 1, and drop it straight into the
+// borrower name field instead of letting raw track data land in a field.
+function initCardSwipeListener() {
+  const SWIPE_START_CHARS = ['%', ';'];
+  const IDLE_RESET_MS = 500;
+
+  let buffer = '';
+  let swiping = false;
+  let lastKeyTime = 0;
+
+  document.addEventListener('keydown', e => {
+    const now = Date.now();
+    if (now - lastKeyTime > IDLE_RESET_MS) {
+      buffer = '';
+      swiping = false;
+    }
+    lastKeyTime = now;
+
+    if (!swiping) {
+      if (buffer === '' && e.key.length === 1 && SWIPE_START_CHARS.includes(e.key)) {
+        swiping = true;
+      } else {
+        return; // ordinary typing, let it through untouched
+      }
+    }
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleCardSwipe(buffer);
+      buffer = '';
+      swiping = false;
+      return;
+    }
+
+    if (e.key.length === 1) {
+      buffer += e.key;
+      e.preventDefault();
+    }
+  }, true);
+}
+
+function parseCardSwipe(raw) {
+  // Track 1 (ISO 7811): %B<account number>^<LAST/FIRST MIDDLE>^<extra data>?
+  const track1 = raw.match(/%B?(\d+)\^([^^]*)\^/);
+  if (track1) {
+    const [, cardNumber, nameField] = track1;
+    const [last, first] = nameField.split('/').map(s => (s || '').trim());
+    const name = [first, last].filter(Boolean).map(toTitleCase).join(' ');
+    return { cardNumber, name: name || null };
+  }
+  // Track 2 only: ;<account number>=<extra data>?
+  const track2 = raw.match(/;(\d+)=/);
+  if (track2) {
+    return { cardNumber: track2[1], name: null };
+  }
+  return null;
+}
+
+function toTitleCase(str) {
+  return str.toLowerCase().replace(/\b\w/g, ch => ch.toUpperCase());
+}
+
+function handleCardSwipe(raw) {
+  const parsed = parseCardSwipe(raw);
+  const nameInput = document.getElementById('borrowerName');
+  const phoneInput = document.getElementById('borrowerPhone');
+
+  if (!parsed) {
+    showSwipeFeedback('Card swipe not recognized — enter borrower info manually.', true);
+    return;
+  }
+
+  if (parsed.name && nameInput) {
+    nameInput.value = parsed.name;
+    nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+    showSwipeFeedback(`Card scanned: ${parsed.name}`);
+    if (phoneInput) phoneInput.focus();
+  } else {
+    showSwipeFeedback('Card scanned, but no name on file — enter borrower name manually.', true);
+    if (nameInput) nameInput.focus();
+  }
+}
+
+function showSwipeFeedback(message, isWarning) {
+  let el = document.getElementById('swipeToast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'swipeToast';
+    document.body.appendChild(el);
+  }
+  el.textContent = message;
+  el.className = isWarning ? 'swipe-toast warning' : 'swipe-toast';
+  el.classList.add('visible');
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => el.classList.remove('visible'), 3000);
+}

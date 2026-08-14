@@ -235,3 +235,22 @@ button:hover { filter: brightness(0.95); }
 }
 .status-chip.available { background: #e3f2e3; color: var(--ok); }
 .status-chip.checked_out { background: #fde8d8; color: var(--vt-orange); }
+
+.swipe-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translate(-50%, 1rem);
+  background: var(--vt-maroon);
+  color: #fff;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 100;
+}
+.swipe-toast.warning { background: var(--danger); }
+.swipe-toast.visible { opacity: 1; transform: translate(-50%, 0); }
